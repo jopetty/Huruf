@@ -1,31 +1,33 @@
 {
-  "manifest_version": 2,
-  "name": "ArabicText",
-  "short_name": "ArabicText",
-  "description": "Automatically increases the size of Arabic text.",
-  "version": "1.2",
-  "minimum_chrome_version": "38",
-  "permissions": [
-      "storage"
-  ],
+	"manifest_version": 2,
+	"name": "Huruf",
+	"short_name": "SHuruf",
+	"description": "Automatically increases the size of Arabic text.",
+	"version": "2.0",
+	"minimum_chrome_version": "38",
+	"permissions": [
+		"storage"
+	],
 
-  "options_page": "popup.html",
+	"options_page": "popup.html",
 
-  "browser_action": {
-    "default_icon": "assets/huruf.png",
-    "default_popup": "popup.html"
-  },
+	"browser_action": {
+		"default_icon": "assets/huruf.png",
+		"default_popup": "popup.html"
+	},
 
-  "icons": {
-    "16": "assets/huruf.png",
-    "128": "assets/huruf.png"
-  },
+	"icons": {
+		"16": "assets/huruf.png",
+		"128": "assets/huruf.png"
+	},
 
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["main.js"],
-      "css": ["styles.css"]
-    }
-  ]
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["main.js"],
+			"css": ["styles.css"]
+		}
+	],
+
+	"web_accessible_resources": ["main.js", "fonts/*"]
 }

@@ -1,81 +1,54 @@
-// This is a modified version of the javascript written by James Padolsey (http://james.padolsey.com/javascript/find-and-replace-text-with-javascript/) and GM port by Arminius99 (https://www.reddit.com/r/learn_arabic/comments/2zpobd/arabic_font_size/)
-var elArray = [];
-var s;
-var n;
-function restore_options() {
-  chrome.storage.sync.get('textSize', function(items) {
-      s = items.textSize;
+(function () {
+	chrome.storage.sync.get(['textSize', 'lineHeight'], function(e) {
+		var textSize = e.textSize;
+		var lineHeight = e.lineHeight;
 
-    function contains(a, obj) {
-        var i = a.length;
-        while (i--) {
-           if (a[i] === obj) {
-               return true;
-           }
-        }
-        return false;
-    }
+		var regex_arabic_script = new RegExp('([\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+( [\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF\W\d]+)*)', 'g');
 
-    function far(searchText, replacement, searchNode) {
-      //Make sure that the far actually has good arguments
-      if (!searchText || typeof replacement === 'undefined') {
-        return; //Error thrown
-      }
+		function getTextNodes() {
 
-      var regex = typeof searchText === 'string' ?
-        new RegExp(searchText, 'g') : searchText,
-        childNodes = (searchNode || document.body).childNodes,
-        cnLength = childNodes.length,
-        excludes = 'html';
+			var walker = document.createTreeWalker(
+				document.body,
+				NodeFilter.SHOW_TEXT,
+				null,
+				false
+			);
 
-      while (cnLength--) {
-        var currentNode = childNodes[cnLength];
-        if (currentNode.nodeType == 1 && (excludes + ',').indexOf(currentNode.nodeName.toLowerCase() + ',') === -1) {
-          arguments.callee(searchText, replacement, currentNode);
-        }
-        if (currentNode.nodeType !== 3 || !regex.test(currentNode.data)) {
-          continue;
-        }
-        var parent = currentNode.parentNode,
-            frag = (function() {
-              var html = currentNode.data.replace(regex, replacement),
-                  wrap = document.createElement('div'),
-                  frag = document.createDocumentFragment();
-              wrap.innerHTML = html;
-              while (wrap.firstChild) {
-                frag.appendChild(wrap.firstChild);
-              }
-              return frag;
-            })();
-        parent.insertBefore(frag, currentNode);
-        parent.removeChild(currentNode);
-        var c = parent.childNodes;
-        for (var i = 0; i < c.length; i++) {
-            if (c[i].nodeType == 1) {
-                if (c[i].attributes != typeof undefined) {
-                    if (c[i].hasAttribute("lang")) {
-                        if (c[i].getAttribute("lang") == "ar") {
-                            elArray.push(c[i]);
-                        }
-                    }
-                }
-            }
-        }
-      }
-    }
-    //Identify text in the Arabic Unicode Ranges
-    //Added the extended range to support more Arabic characters.
-    far('([\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+( [\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+)*)', '<span lang="ar">$1</span>');
+			var node;
+			var textNodes = [];
 
-    var el = document.getElementsByTagName("*");
-    var n = parseFloat(s)/100;
-    n = n.toString() + "em";
-    s += "%";
-    for (var i = 0; i < elArray.length; i++) {
-        elArray[i].style.fontSize = s;
-        elArray[i].style.lineHeight = n;
+			while (node = walker.nextNode()) {
+				if ((node.nodeValue.trim() != "") && (node.nodeValue.match(regex_arabic_script))) {
+					textNodes.push(node);
+				}
+			}
+			return textNodes;
+		}
 
-    }
-});
-}
-restore_options();
+		function setClass(node, html) {
+			var parent = node.parentNode;
+			if (!parent) return;
+			var next = node.nextSibling;
+			var parser = document.createElement('div');
+			parser.innerHTML = html;
+			while (parser.firstChild) {
+				parent.insertBefore(parser.firstChild, next);
+			}
+			parent.removeChild(node);
+		}
+
+		function setLang() {
+
+			var textNodes = getTextNodes();
+			for (var i = 0; i < textNodes.length; i++) {
+				setClass(
+					textNodes[i],
+					textNodes[i].nodeValue.replace(regex_arabic_script, "<span class='ar' style='font-size:" + (textSize / 100) + "em; line-height:" + (lineHeight / 100) + "em'>$&</span>")
+				);
+			}
+		}
+
+		// Call setLang()
+		setLang();
+	});
+})();

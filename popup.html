@@ -1,32 +1,125 @@
 <html>
   <head>
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="" />
-    <style>
-      html{
-        width: 300px;
-      }
-      #size{
-        width: 70%;
-      }
-      div[role="main"]{
-          margin: 0,auto;
-      }
-    </style>
-  </head>
+	<title>Huruf</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<style>
+		html, body{
+			width: 200px;
+			background-color: #efefef;
+			color: #222;
+			margin: 0;
+			padding: 0;
+			font-family: "Helvetica Neue";
+		}
+		#size, #height{
+			width: 70%;
+			text-align: center;
+		}
+		header {
+			background-color: #3a7295;
+			color: #efefef;
+			padding: 20px;
+			text-align: center;
+			font-family: "Droid Arabic Naskh";
+			font-size: 2.7em;
+		}
+		div[role="main"]{
+			margin: 0,auto;
+			padding: 5px;
+			text-align: center;
+		}
+		footer {
+			color: #999;
+			text-align: center;
+			font-size: .8em;
+		}
+		hr {
+			border: none;
+			border-bottom: solid 1px #aaa;
+		}
+		a {
+			color: #3a7295;
+			text-decoration: none;
+		}
+		a:hover, a:active {
+			text-decoration: underline;
+		}
+		td {
+			font-weight: 300;
+		}
+		input[type=range]{
+			-webkit-appearance: none;
+			margin-bottom: 10px;
+		}
 
-  <body>
-    <header>
-    </header>
+		input[type=range]::-webkit-slider-runnable-track {
+			width: 300px;
+			height: 5px;
+			background: #ddd;
+			border: none;
+			border-radius: 3px;
+		}
 
-    <div role="main">
-      <h1>Font Size:</h1>
-      <p>100%<input type="range" name="size" min="100" max="150" id="size"/>150%</p>
-      <!-- <input type="submit" value="Save" id="save"/> -->
-    </div>
+		input[type=range]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			border: none;
+			height: 16px;
+			width: 16px;
+			border-radius: 50%;
+			background: #999;
+			margin-top: -6px;
+		}
 
-    <footer>
-    </footer>
-    <script src="options.js"></script>
-  </body>
+		input[type=range]:focus {
+			outline: none;
+		}
+		table {
+			border: none;
+			width: 80%;
+			margin: 12px auto;
+			border-bottom: solid 1px #ccc;
+		}
+		.label {
+			text-align: left;
+		}
+		.value {
+			text-align: right;
+		}
+	</style>
+	</head>
+
+	<body>
+		<header>
+			<bdi dir="rtl" lang="ar">حروف</bdi>
+		</header>
+
+		<div role="main">
+			<table>
+				<tr>
+					<td class="label">Font Size:</td>
+					<td class="value" id="sizeValue"></td>
+				</tr>
+			</table>
+			<input type="range" name="size" min="100" max="150" id="size"/>
+
+
+			<br>
+			<br>
+
+			<table>
+				<tr>
+					<td class="label">Line Height:</td>
+					<td class="value" id="heightValue"></td>
+				</tr>
+			</table>
+			<input type="range" name="height" min="100" max="150" id="height"/>
+			<br>
+		</div>
+		<!-- <hr /> -->
+
+		<footer>
+			<p>Made with &#60;3 by <a target="_blank" href="https://github.com/jopetty">Jackson Petty</a></p>
+		</footer>
+		<script src="options.js"></script>
+	</body>
 </html>

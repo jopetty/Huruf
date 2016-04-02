@@ -43,12 +43,11 @@
 			for (var i = 0; i < textNodes.length; i++) {
 				setClass(
 					textNodes[i],
-					textNodes[i].nodeValue.replace(regex_arabic_script, "<span class='ar' style='font-size:" + (textSize / 100) + "em; line-height:" + (lineHeight / 100) + "em'>$&</span>")
+					textNodes[i].nodeValue.replace(regex_arabic_script, "<span class='ar' style='font-size:" + (textSize / 100) + "em; line-height:" + (lineHeight / 100) + "em;'>$&</span>")
 				);
 			}
 		}
 
-		// Call setLang()
 		setLang();
 	});
 })();

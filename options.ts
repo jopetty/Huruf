@@ -1,7 +1,7 @@
 function save_options() {
     var s = parseInt(document.getElementById('size').value);
     var h = parseInt(document.getElementById('height').value);
-    var sw = document.getElementById("onOffSwitch").checked;
+    var sw = (document.getElementById("onOffSwitch") as HTMLInputElement).checked;
     chrome.storage.sync.set({
         textSize: s,
         lineHeight: h,
@@ -20,7 +20,7 @@ function restore_options() {
         document.getElementById('sizeValue').innerHTML = items.textSize + '%';
         document.getElementById('height').value = items.lineHeight;
         document.getElementById('heightValue').innerHTML = items.lineHeight + '%';
-        document.getElementById("onOffSwitch").checked = items.onOffSwitch;
+        (document.getElementById("onOffSwitch") as HTMLInputElement).checked = items.onOffSwitch;
     });
 }
 
@@ -37,8 +37,8 @@ document.getElementById('size').addEventListener('mouseup', save_options);
 document.getElementById('height').addEventListener('mouseup', save_options);
 document.getElementById('size').addEventListener('mousemove', updateSize);
 document.getElementById('height').addEventListener('mousemove', updateHeight);
-document.getElementById("onOffSwitch").onclick = () => {
-    var checked = document.getElementById("onOffSwitch").checked;
+(document.getElementById("onOffSwitch") as HTMLInputElement).onclick = () => {
+    var checked = (document.getElementById("onOffSwitch") as HTMLInputElement).checked;
     console.log(checked);
     chrome.storage.sync.set({
         onOffSwitch: checked,

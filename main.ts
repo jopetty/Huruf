@@ -1,17 +1,28 @@
 (function () {
     chrome.storage.sync.get(['textSize', 'lineHeight', 'onOffSwitch'], function (e) {
-        var textSize = e.textSize;
-        var lineHeight = e.lineHeight;
-        var checked = e.onOffSwitch;
-        var arabicRegEx = new RegExp('([\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+(' +
+        let textSize: number = e.textSize;
+        let lineHeight: number = e.lineHeight;
+        let checked: boolean = e.onOffSwitch;
+
+        let arabicRegEx = new RegExp('([\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+(' +
             ' [\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF\W\d]+)*)', 'g');
-        function hasArabicScript(node) {
+
+        function hasArabicScript(node: Node): boolean {
             return !!(node.nodeValue && (node.nodeValue.trim() != "") && (node.nodeValue.match(arabicRegEx)));
         }
-        function getArabicTextNodesIn(rootNode) {
-            var walker = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, null, false);
-            var node;
-            var arabicTextNodes = [];
+
+        function getArabicTextNodesIn(rootNode: Node): Array<Node> {
+
+            let walker: TreeWalker = document.createTreeWalker(
+                rootNode,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+
+            let node: Node;
+            let arabicTextNodes: Array<Node> = [];
+
             // noinspection JSAssignmentUsedAsCondition
             while (node = walker.nextNode()) {
                 if (hasArabicScript(node)) {
@@ -20,41 +31,51 @@
             }
             return arabicTextNodes;
         }
-        function setNodeHtml(node, html) {
-            var parent = node.parentNode;
-            if (!parent || !node)
-                return;
-            var next = node.nextSibling;
-            var parser = document.createElement('div');
+
+        function setNodeHtml(node: Node, html: string) {
+            let parent: Node = node.parentNode;
+
+            if (!parent || !node) return;
+
+            let next = node.nextSibling;
+            let parser = document.createElement('div');
             parser.innerHTML = html;
             while (parser.firstChild) {
                 parent.insertBefore(parser.firstChild, next);
             }
             parent.removeChild(node);
         }
-        function updateNode(node) {
+
+        function updateNode(node: Node) {
             if (node.nodeValue) {
-                var text = node.nodeValue.replace(arabicRegEx, "<span class='ar'' style='font-size:" + (textSize / 100) + "em;" + " line-height:" + (lineHeight / 100) + "em;'>$&</span>");
+                let text: string = node.nodeValue.replace(arabicRegEx,
+                    "<span class='ar'' style='font-size:" + (textSize / 100) + "em;" + " line-height:" + (lineHeight / 100) + "em;'>$&</span>");
                 setNodeHtml(node, text);
             }
         }
+
         function setLangAll() {
-            getArabicTextNodesIn(document.body).forEach(function (it) { return updateNode(it); });
+            getArabicTextNodesIn(document.body).forEach((it: Node) => updateNode(it));
         }
+
         function startObserver() {
-            var config = {
+
+            let config: MutationObserverInit = {
                 attributes: false,
                 childList: true,
                 subtree: true,
                 characterData: true,
                 characterDataOldValue: false,
             };
-            var callback = function (mutationsList) {
-                mutationsList.forEach(function (record) {
+
+            let callback: MutationCallback = function (mutationsList: MutationRecord[]) {
+                mutationsList.forEach((record: MutationRecord) => {
                     if (record.addedNodes.length > 0) {
-                        record.addedNodes.forEach(function (node) {
+                        record.addedNodes.forEach((node: Node) => {
+
                             // For each node with Arabic script in node
-                            getArabicTextNodesIn(node).forEach(function (arabicNode) {
+                            getArabicTextNodesIn(node).forEach((arabicNode: Node) => {
+
                                 // Update arabicNode only if it hasn't been updated
                                 if (arabicNode.parentElement && arabicNode.parentElement.getAttribute("class") != "ar") {
                                     updateNode(arabicNode);
@@ -64,11 +85,14 @@
                     }
                 });
             };
+
             new MutationObserver(callback).observe(document.body, config);
         }
+
         if (checked) {
             setLangAll();
             startObserver();
         }
+
     });
 })();

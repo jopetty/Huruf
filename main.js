@@ -1,7 +1,8 @@
 (function () {
-    chrome.storage.sync.get(['textSize', 'lineHeight'], function (e) {
+    chrome.storage.sync.get(['textSize', 'lineHeight', 'onOffSwitch'], function (e) {
         var textSize = e.textSize;
         var lineHeight = e.lineHeight;
+        var checked = e.onOffSwitch;
         var arabicRegEx = new RegExp('([\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+(' +
             ' [\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF\W\d]+)*)', 'g');
         function hasArabicScript(node) {
@@ -65,7 +66,9 @@
             };
             new MutationObserver(callback).observe(document.body, config);
         }
-        setLangAll();
-        startObserver();
+        if (checked) {
+            setLangAll();
+            startObserver();
+        }
     });
 })();

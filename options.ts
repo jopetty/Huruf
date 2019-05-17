@@ -28,6 +28,16 @@ function updateHeight() {
     document.getElementById('heightValue').innerHTML = document.getElementById('height').value + '%';
 }
 
+function toggleSwitch() {
+    var checkbox = document.getElementById("onOffSwitch") as HTMLInputElement;
+    var checked = checkbox.checked;
+    console.log(checkbox.checked);
+    /*chrome.storage.sync.set({
+        onOffSwitch: checked,
+    }, function () {
+    });*/
+}
+
 document.addEventListener('DOMContentLoaded', restore_options);
 document.getElementById('size').addEventListener('mouseup', save_options);
 document.getElementById('height').addEventListener('mouseup', save_options);

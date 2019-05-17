@@ -13,7 +13,7 @@ function save_options() {
 function restore_options() {
     chrome.storage.sync.get({
         textSize: '130',
-        lineHeight: '190',
+        lineHeight: '150',
         onOffSwitch: true,
     }, function (items) {
         document.getElementById('size').value = items.textSize;
@@ -32,18 +32,16 @@ function updateHeight() {
     document.getElementById('heightValue').innerHTML = document.getElementById('height').value + '%';
 }
 
-function toggleSwitch() {
+document.addEventListener('DOMContentLoaded', restore_options);
+document.getElementById('size').addEventListener('mouseup', save_options);
+document.getElementById('height').addEventListener('mouseup', save_options);
+document.getElementById('size').addEventListener('mousemove', updateSize);
+document.getElementById('height').addEventListener('mousemove', updateHeight);
+(document.getElementById("onOffSwitch") as HTMLInputElement).onclick = () => {
     var checked = (document.getElementById("onOffSwitch") as HTMLInputElement).checked;
     console.log(checked);
     chrome.storage.sync.set({
         onOffSwitch: checked,
     }, function () {
     });
-}
-
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('size').addEventListener('mouseup', save_options);
-document.getElementById('height').addEventListener('mouseup', save_options);
-document.getElementById('size').addEventListener('mousemove', updateSize);
-document.getElementById('height').addEventListener('mousemove', updateHeight);
-(document.getElementById("onOffSwitch") as HTMLInputElement).addEventListener('toggle', toggleSwitch);
+};

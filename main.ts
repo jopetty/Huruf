@@ -1,8 +1,8 @@
 (function () {
     chrome.storage.sync.get(['textSize', 'lineHeight', 'onOffSwitch'], function (e) {
-        let textSize = e.textSize;
-        let lineHeight = e.lineHeight;
-        let checked = e.onOffSwitch;
+        let textSize: number = e.textSize;
+        let lineHeight: number = e.lineHeight;
+        let checked: boolean = e.onOffSwitch;
 
         let arabicRegEx = new RegExp('([\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF]+(' +
             ' [\u0600-\u06FF\u0750-\u077F\u08a0-\u08ff\uFB50-\uFDFF\uFE70-\uFEFF\W\d]+)*)', 'g');

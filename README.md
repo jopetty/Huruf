@@ -1,3 +1,5 @@
+**NOTE: HURUF is archived, and is no longer being updated.**
+
 # Huruf (حروف)
 A simple chrome extension to make reading Arabic easier
 
